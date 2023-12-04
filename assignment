@@ -1,0 +1,302 @@
+//String compression
+public class Main {
+    public static String comp(String s) {
+        StringBuilder c = new StringBuilder();
+        int cnt = 1;
+
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == s.charAt(i - 1)) {
+                cnt++;
+            } else {
+                c.append(s.charAt(i - 1)).append(cnt);
+                cnt = 1;
+            }
+        }
+
+        c.append(s.charAt(s.length() - 1)).append(cnt);
+        return c.toString();
+    }
+
+    public static String decomp(String s) {
+        StringBuilder r = new StringBuilder();
+        int i = 0;
+
+        while (i < s.length()) {
+            char c = s.charAt(i);
+            i++;
+
+            if (i < s.length() && Character.isDigit(s.charAt(i))) {
+                int cnt = Character.getNumericValue(s.charAt(i));
+                i++;
+                for (int j = 0; j < cnt; j++) {
+                    r.append(c);
+                }
+            } else {
+                r.append(c);
+            }
+        }
+
+        return r.toString();
+    }
+
+    public static void main(String[] args) {
+        String org = "aabcccccaaa";
+        String com = comp(org);
+        System.out.println(com);
+        String inp = "ab2c1ac3";
+        String out = decomp(inp);
+        System.out.println(out);
+    }
+}
+
+
+//Linked List
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class Main {
+    static Node head;
+
+    static void printKthToLast(int k) {
+        Node slow = head;
+        Node fast = head;
+
+        for (int i = 0; i < k; i++) {
+            if (fast == null) {
+                System.out.println("Invalid value of k, k is greater than the length of the list");
+                return;
+            }
+            fast = fast.next;
+        }
+
+        while (fast != null) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        System.out.println("Kth to last element is: " + slow.data);
+    }
+
+    public static void main(String[] args) {
+        head = new Node(1);
+        head.next = new Node(2);
+        head.next.next = new Node(3);
+        head.next.next.next = new Node(4);
+        head.next.next.next.next = new Node(5);
+
+        int k = 2;
+        printKthToLast(k);
+    }
+}
+
+
+//Stack minimum-
+import java.util.Stack;
+
+class Stk {
+    Stack<Integer> mStk = new Stack<>();
+    Stack<Integer> minStk = new Stack<>();
+
+    void push(int val) {
+        mStk.push(val);
+
+        if (minStk.isEmpty() || val <= minStk.peek()) {
+            minStk.push(val);
+        }
+    }
+
+    void pop() {
+        if (!mStk.isEmpty()) {
+            int pVal = mStk.pop();
+            if (pVal == minStk.peek()) {
+                minStk.pop();
+            }
+        }
+    }
+
+    int top() {
+        if (!mStk.isEmpty()) {
+            return mStk.peek();
+        }
+        return -1;
+    }
+
+    int min() {
+        if (!minStk.isEmpty()) {
+            return minStk.peek();
+        }
+        return -1;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Stk stk = new Stk();
+
+        stk.push(3);
+        stk.push(5);
+        System.out.println("Min Elem: " + stk.min());
+
+        stk.push(2);
+        stk.push(1);
+        System.out.println("Min Elem: " + stk.min());
+
+        stk.pop();
+        System.out.println("Top Elem: " + stk.top());
+        System.out.println("Min Elem: " + stk.min());
+    }
+}
+In code stuff, stack beats arrays for handling function calls and recursions. The stack smoothly tracks function contexts - 
+locals and return addresses, keeping things in order. Its in-built support for recursion makes it handy for multiple nested calls. 
+This makes it easy and fast – operations like push and pop happen lickety-split. Imagine using arrays for this – 
+it'd be a mess with complex memory juggling and sluggish actions. So, stacks keep things neat, quick, and simple for managing functions in code.
+
+//d..........
+public class Main {
+    public static int trapWater(int[] height) {
+        int n = height.length;
+        if (n <= 2) {
+            return 0;
+        }
+
+        int[] leftMax = new int[n];
+        int[] rightMax = new int[n];
+
+        leftMax[0] = height[0];
+        for (int i = 1; i < n; i++) {
+            leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+        }
+
+        rightMax[n - 1] = height[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            rightMax[i] = Math.max(rightMax[i + 1], height[i]);
+        }
+
+        int trappedWater = 0;
+        for (int i = 0; i < n; i++) {
+            trappedWater += Math.max(0, Math.min(leftMax[i], rightMax[i]) - height[i]);
+        }
+
+        return trappedWater;
+    }
+
+    public static void main(String[] args) {
+        int[] elevation = {2, 1, 3, 0, 1, 2, 3};
+        int result = trapWater(elevation);
+        System.out.println("Amount of water trapped: " + result + " units");
+    }
+}
+//ee
+if  you're a cashier dealing with coins like 1, 2, 5, 8, 10 bucks. Now, someone needs change for 7 bucks. 
+What's the smartest way to hand out coins? Well, you want to use as few coins as possible, right?
+So, you'd give a 5-buck coin and a 2-buck coin, making 7 in total.
+
+Now, there are two ways to tackle this change thing.
+One is being greedy, like, you grab the biggest
+coin you can at each step. The other is dynamic programming, where you plan ahead,
+break the problem into bits, and solve them. Greedy is like choosing what feels right in the moment,
+and dynamic programming is like being a chess master, thinking several moves ahead.
+
+Bonus round! If you got a number, say 9273, and you gotta drop one digit to make the biggest number,
+what would you do? Easy! You kick out the smaller digits one by one. So, 
+from 9273, you remove 2, then 9, then 7, and bam, you got 973, which is the biggest number you can make.
+
+Why is this greedy? 'Cause you're kinda impulsively 
+going for the larger digits at each step, not planning every move like a chess grandmaster. But hey, it often works out!
+
+///
+Sure thing!
+
+**Dot Product:**
+
+Think of it like a friendship test for arrows (vectors). If they're pointing in the same direction, 
+it's a good match (positive value). If they're at right angles, it's okay (zero). If they're pointing opposite ways, it's not cool (negative value).
+
+**Use Case in Graphics:**
+
+Helps figure out how much direct light hits a surface. 
+Brightness in graphics depends on this relationship.
+
+**Cross Product:**
+
+Imagine creating a new arrow that stands straight up, 
+right between two arrows (vectors).
+
+**Use Case in Graphics:**
+
+Useful in 3D graphics to find which way a surface is facing. 
+This helps with shading and making things look real.
+////
+snippet for a class that represents a basic sentiment analysis system.
+This code uses the Java programming language and a simple classification model:
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+
+    private Map<String, String> positiveWords;
+    private Map<String, String> negativeWords;
+
+    public SentimentAnalysis() {
+        initializePositiveWords();
+        initializeNegativeWords();
+    }
+
+    private void initializePositiveWords() {
+        positiveWords = new HashMap<>();
+        positiveWords.put("good", "positive");
+        positiveWords.put("happy", "positive");
+        positiveWords.put("excellent", "positive");
+        
+    }
+
+    private void initializeNegativeWords() {
+        negativeWords = new HashMap<>();
+        negativeWords.put("bad", "negative");
+        negativeWords.put("sad", "negative");
+        negativeWords.put("poor", "negative");
+      
+    }
+
+    public String analyzeSentiment(String text) {
+        int positiveCount = countMatches(text, positiveWords);
+        int negativeCount = countMatches(text, negativeWords);
+
+        if (positiveCount > negativeCount) {
+            return "Positive Sentiment";
+        } else if (negativeCount > positiveCount) {
+            return "Negative Sentiment";
+        } else {
+            return "Neutral Sentiment";
+        }
+    }
+
+    private int countMatches(String text, Map<String, String> wordMap) {
+        int count = 0;
+        for (String word : wordMap.keySet()) {
+            if (text.toLowerCase().contains(word)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        SentimentAnalysis sentimentAnalyzer = new SentimentAnalysis();
+
+        String review1 = "I had a good experience with the product.";
+        String sentiment1 = sentimentAnalyzer.analyzeSentiment(review1);
+        System.out.println("Review 1: " + sentiment1);
+
+        String review2 = "The service was poor, and I'm not happy.";
+        String sentiment2 = sentimentAnalyzer.analyzeSentiment(review2);
+        System.out.println("Review 2: " + sentiment2);
+    }
+}
